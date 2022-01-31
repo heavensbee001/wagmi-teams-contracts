@@ -18,14 +18,9 @@ contract WagmiTeamsPortal {
         uint256 createdAt;
     }
 
-    struct PositionArray {
-        uint totalNumber;
-        Position[] positions;
-    }
-
     enum PostionType{ HACKATHON, JOB }
 
-    mapping (PostionType => PositionArray) public allPositions;
+    mapping (PostionType => Position[]) public allPositions;
 
     constructor() {
         console.log("Initialized contract");
@@ -51,8 +46,7 @@ contract WagmiTeamsPortal {
             position.contact,
             position.createdAt);
         
-        allPositions[postionType].totalNumber += 1;
-        allPositions[postionType].positions.push(newPosition);
+        allPositions[postionType].push(newPosition);
     }
 
     function getPaginatedPositions(PostionType postionType, uint256 _page, uint256 _resultsPerPage) external view returns(Position[] memory positions) {
@@ -62,11 +56,11 @@ contract WagmiTeamsPortal {
         // starting position for first result element
         uint256 _positionIndex = _resultsPerPage * _page - _resultsPerPage;
         // resultPositions array length in case it is less than _resultsPerPage
-        uint256 _resultsPerPageModulus = allPositions[postionType].positions.length % _resultsPerPage;
+        uint256 _resultsPerPageModulus = allPositions[postionType].length % _resultsPerPage;
         
         if (
-            allPositions[postionType].positions.length == 0 || 
-            _positionIndex > allPositions[postionType].positions.length - 1
+            allPositions[postionType].length == 0 || 
+            _positionIndex > allPositions[postionType].length - 1
         ) {
             return new Position[](0);
         }
@@ -74,7 +68,7 @@ contract WagmiTeamsPortal {
         Position[] memory _resultPositions = new Position[](_resultsPerPageModulus);
 
         for (uint index = 0; index < _resultsPerPageModulus; index ++) {
-            _resultPositions[index] = allPositions[postionType].positions[_positionIndex + index];
+            _resultPositions[index] = allPositions[postionType][_positionIndex + index];
         }
 
         return _resultPositions;
