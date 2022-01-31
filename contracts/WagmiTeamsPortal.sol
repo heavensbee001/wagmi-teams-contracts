@@ -6,6 +6,8 @@ import "hardhat/console.sol";
 
 contract WagmiTeamsPortal {
 
+    address private _owner;
+
     struct Position {
         string title;
         string projectOrCompanyName;
@@ -27,6 +29,8 @@ contract WagmiTeamsPortal {
 
     constructor() {
         console.log("Initialized contract");
+
+        _owner = msg.sender;
     }
 
     function sendPosition(PostionType postionType, Position calldata position) external payable {
@@ -55,8 +59,11 @@ contract WagmiTeamsPortal {
         require(_page > 0, "Page number required");
         require(_resultsPerPage > 0, "Results per page number required");
 
+        // starting position for first result element
         uint256 _positionIndex = _resultsPerPage * _page - _resultsPerPage;
-
+        // resultPositions array length in case it is less than _resultsPerPage
+        uint256 _resultsPerPageModulus = allPositions[postionType].positions.length % _resultsPerPage;
+        
         if (
             allPositions[postionType].positions.length == 0 || 
             _positionIndex > allPositions[postionType].positions.length - 1
@@ -64,13 +71,18 @@ contract WagmiTeamsPortal {
             return new Position[](0);
         }
 
-        Position[] memory _resultPositions = new Position[](_resultsPerPage);
+        Position[] memory _resultPositions = new Position[](_resultsPerPageModulus);
 
-        for (uint index = 0; index < _resultsPerPage; index ++) {
+        for (uint index = 0; index < _resultsPerPageModulus; index ++) {
             _resultPositions[index] = allPositions[postionType].positions[_positionIndex + index];
         }
 
         return _resultPositions;
+    }
+
+    function tipOwner() public payable {
+        (bool success, ) = payable(_owner).call{value: msg.value}("");
+        require(success, "Failed to tip owner");
     }
 
 }
