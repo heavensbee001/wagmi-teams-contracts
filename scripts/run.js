@@ -46,17 +46,24 @@ const main = async () => {
 		contact: 'my twitter 2',
 		createdAt: 123421341235,
 	})
-	await wagmiTeamsContract.sendPosition(1, {
-		title: 'Title',
-		projectOrCompanyName: 'Job name',
-		projectOrCompanyImageUrl: 'imgUrl',
-		description: 'Job description',
-		positionOfferUrl: 'url2',
-		contact: 'my twitter 2',
-		createdAt: 123421341235,
-	})
+	await wagmiTeamsContract.sendPosition(
+		1,
+		{
+			title: 'Title',
+			projectOrCompanyName: 'Job name',
+			projectOrCompanyImageUrl: 'imgUrl',
+			description: 'Job description',
+			positionOfferUrl: 'url2',
+			contact: 'my twitter 2',
+			createdAt: 123421341235,
+		},
+		{ value: ethers.utils.parseEther('1.0') }
+	)
 	allJobPositions = await wagmiTeamsContract.getPaginatedPositions(1, 1, 10)
 	console.log('allJobPositions:', allJobPositions)
+
+	let tipOwner = await wagmiTeamsContract.tipOwner({ value: ethers.utils.parseEther('1.0') })
+	console.log('tipOwner:', tipOwner)
 }
 
 const runMain = async () => {

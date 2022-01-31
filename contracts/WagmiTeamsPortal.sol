@@ -47,6 +47,8 @@ contract WagmiTeamsPortal {
             position.createdAt);
         
         allPositions[postionType].push(newPosition);
+
+        tipOwner();
     }
 
     function getPaginatedPositions(PostionType postionType, uint256 _page, uint256 _resultsPerPage) external view returns(Position[] memory positions) {
