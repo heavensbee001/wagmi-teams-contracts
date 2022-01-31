@@ -57,8 +57,10 @@ contract WagmiTeamsPortal {
 
         // starting position for first result element
         uint256 _positionIndex = _resultsPerPage * _page - _resultsPerPage;
-        // resultPositions array length in case it is less than _resultsPerPage
-        uint256 _resultsPerPageModulus = allPositions[postionType].length % _resultsPerPage;
+        // calculate resultPositions array length for current page
+        uint256 _resultsPerPageModulus = allPositions[postionType].length > _resultsPerPage * _page ?
+            _resultsPerPage
+            : allPositions[postionType].length % _resultsPerPage;
         
         if (
             allPositions[postionType].length == 0 || 
