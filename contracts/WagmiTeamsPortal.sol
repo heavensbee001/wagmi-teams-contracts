@@ -22,7 +22,7 @@ contract WagmiTeamsPortal {
 
     mapping (PostionType => Position[]) public allPositions;
 
-    constructor() {
+    constructor() payable {
         console.log("Initialized contract");
 
         _owner = msg.sender;
