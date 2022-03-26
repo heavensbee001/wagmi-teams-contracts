@@ -16,6 +16,7 @@ contract WagmiTeamsPortal {
         string positionOfferUrl;
         string contact;
         uint256 createdAt;
+        address sender;
     }
 
     enum PostionType{ HACKATHON, JOB }
@@ -44,7 +45,9 @@ contract WagmiTeamsPortal {
             position.description,
             position.positionOfferUrl,
             position.contact,
-            position.createdAt);
+            position.createdAt,
+            msg.sender
+        );
         
         allPositions[postionType].push(newPosition);
 
